@@ -59,8 +59,10 @@ func runDir(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error on creating gobusterdir: %w", err)
 	}
 	//3.执行
-	cli.GoBuster(mainCtx, globalopts, plugin)
-	return fmt.Errorf("this is an Err")
+	if err := cli.GoBuster(mainCtx, globalopts, plugin); err != nil {
+		return err
+	}
+	return nil
 }
 
 func parseDirOptions() (*lib.Options, *dir.OptionsDir, error) {
