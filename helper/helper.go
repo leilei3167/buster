@@ -36,3 +36,20 @@ func ParseCommaSeparatedInt(inputString string) (lib.IntSet, error) {
 	}
 	return ret, nil
 }
+func SliceContains(s []int, e int) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+func JoinIntSlice(s []int) string {
+	valuesText := make([]string, len(s))
+	for i, number := range s {
+		text := strconv.Itoa(number)
+		valuesText[i] = text
+	}
+	result := strings.Join(valuesText, ",")
+	return result
+}

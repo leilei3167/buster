@@ -35,7 +35,7 @@ type RequestOptions struct {
 	ReturnBody bool
 }
 
-func NewHTTPClien(opt *HTTPOptions) (*HTTPClient, error) {
+func NewHTTPClient(opt *HTTPOptions) (*HTTPClient, error) {
 	var client HTTPClient
 
 	//配置代理
@@ -95,7 +95,8 @@ func NewHTTPClien(opt *HTTPOptions) (*HTTPClient, error) {
 }
 
 // Request 对目标发起http请求
-func (client *HTTPClient) Request(ctx context.Context, fullURL string, opts RequestOptions) (*int, int64, http.Header, []byte, error) {
+func (client *HTTPClient) Request(ctx context.Context, fullURL string,
+	opts RequestOptions) (*int, int64, http.Header, []byte, error) {
 	resp, err := client.makeRequest(ctx, fullURL, opts.Host, opts.Body)
 	if err != nil {
 		if errors.Is(ctx.Err(), context.Canceled) {
@@ -115,7 +116,7 @@ func (client *HTTPClient) Request(ctx context.Context, fullURL string, opts Requ
 		}
 		length = int64(len(body))
 	} else {
-		//TODO:目录爆破本质上是对同一个url发起多次http请求,确保可以复用底层的tcp连接
+		//TODO:目录爆破本质上是对同一个url发起多次http请求,必须将body读取完毕并关闭以确保可以复用底层的tcp连接
 		//即使不需要body也需要将body内容全部读取完毕,否则无法复用连接
 		length, err = io.Copy(io.Discard, resp.Body)
 		if err != nil {
